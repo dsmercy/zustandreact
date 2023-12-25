@@ -24,10 +24,9 @@ const requests ={
 let email = "";
 const storeData = JSON.parse(localStorage.getItem("account"));
 if(storeData){
-    const userDataString = storeData.state.signedInUserData[0];
+    const userDataString = storeData.state && storeData.state.signedInUserData && storeData.state.signedInUserData[0];
     email = userDataString?.data?.users?.email;
 }
-if(storeData){console.log('signedInUserData',email);}
 
 const Account ={
     userlogin : (values)=>requests.post('Account/Login', values),
