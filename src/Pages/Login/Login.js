@@ -15,9 +15,15 @@ import { useEffect } from "react";
 import Services from "../../services/Services";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import useAccountStore from "../../store/useAccountStore";
 
 const Login = () => {
   const navigate = useNavigate();
+
+  const signInUser = useAccountStore((state) => state.signInUser);
+  const signOut = useAccountStore((state) => state.signOut);
+  const signedInUserData = useAccountStore((state) => state.signedInUserData);
+
   const [validated, setValidated] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -87,7 +93,7 @@ const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.
     }
     const data = { email: email, password: password ? password : finalOtp, isOtp: otpField };
 
-    Services.Account.userlogin(data)
+   await signInUser(data)
       .then((response) => {
         // console.log(response);
         // console.log(response.data);
