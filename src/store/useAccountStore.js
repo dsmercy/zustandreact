@@ -13,6 +13,7 @@ const useAccountStore = create(persist(devtools((set) => ({
                     signedInUserData: [userDto, state.signedInUserData], 
                 }));
             }
+            return userDto;
         } catch (error) {
             return Promise.reject({ error: error.data });
         }
