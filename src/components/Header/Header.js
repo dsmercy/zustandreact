@@ -1,8 +1,13 @@
 import React from 'react';
 import logo from '../../assets/images/Logo.png';
 import { NavLink } from 'react-router-dom';
+import useAccountStore from '../../store/useAccountStore';
 
 const Header = () => {
+
+  const signedInUserData = useAccountStore((state) => state.signedInUserData);
+
+console.log('signedInUserData',signedInUserData);
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light">
@@ -82,12 +87,19 @@ const Header = () => {
               </li>
             </ul>
             <div className="log">
-              <NavLink className="nav-link" to="/login">
-                Login
-              </NavLink>
-              <NavLink className="nav-link reg" to="/register">
-                Register
-              </NavLink>
+              {signedInUserData ?
+                <NavLink className="nav-link" to="/login">
+                  {signedInUserData[0].data?.users?.firstName}
+                </NavLink> :
+                <>
+                  <NavLink className="nav-link" to="/login">
+                    Login
+                  </NavLink>
+                  <NavLink className="nav-link reg" to="/register">
+                    Register
+                  </NavLink>
+                </>}
+              
             </div>
           </div>
         </div>
