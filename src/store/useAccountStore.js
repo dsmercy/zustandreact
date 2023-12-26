@@ -1,4 +1,4 @@
-import create from 'zustand';
+import {create} from 'zustand';
 import Services from "../services/Services";
 import { toast } from "react-toastify";
 import { devtools, persist } from 'zustand/middleware';
@@ -30,6 +30,10 @@ const useAccountStore = create(persist(devtools((set) => ({
     },
     signOut: () => {
         set(() => ({ signedInUserData: null }));
+        // Ensure the state is correctly persisted after setting to null
+        set.persist();
+        localStorage.removeItem('account');
+        localStorage.removeItem('token');
         // history.push('/');
     },
 })), { name: 'account' }));

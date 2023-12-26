@@ -6,8 +6,8 @@ import useAccountStore from '../../store/useAccountStore';
 const Header = () => {
 
   const signedInUserData = useAccountStore((state) => state.signedInUserData);
+  const signOut = useAccountStore((state) => state.signOut);
 
-console.log('signedInUserData',signedInUserData);
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light">
@@ -88,9 +88,14 @@ console.log('signedInUserData',signedInUserData);
             </ul>
             <div className="log">
               {signedInUserData ?
+                <>
                 <NavLink className="nav-link" to="/login">
                   {signedInUserData[0].data?.users?.firstName}
-                </NavLink> :
+                </NavLink>
+                <button className="nav-link reg" onClick={signOut}>
+                Logout
+                  </button>
+                </> :
                 <>
                   <NavLink className="nav-link" to="/login">
                     Login
