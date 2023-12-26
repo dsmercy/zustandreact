@@ -23,6 +23,7 @@ const Login = () => {
   const signInUser = useAccountStore((state) => state.signInUser);
   const signOut = useAccountStore((state) => state.signOut);
   const signedInUserData = useAccountStore((state) => state.signedInUserData);
+  const getUser = useAccountStore((state) => state.getUser);
 
   const [validated, setValidated] = useState(false);
   const [email, setEmail] = useState("");
@@ -76,6 +77,7 @@ const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.
         toast.success(response.message, {
           position: toast.POSITION.TOP_RIGHT,
         });
+        
       })
       .catch((errors) => {
         console.log(":error", errors); 
@@ -95,22 +97,19 @@ const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.
 
    await signInUser(data)
       .then((response) => {
-        // console.log(response);
-        // console.log(response.data);
         const user= response?.data?.accessToken
-        if (user) {
-          
+        if (user) {          
           navigate("/userdashboard");
           localStorage.setItem("token", response.data.accessToken);
-          toast.success(response.response.data.message, {
+          toast.success(response.message, {
             position: toast.POSITION.TOP_RIGHT,
           });
-       
+          getUser();
         }
       })
       .catch((errors) => {
-        console.log(errors.response.data.message);
-        toast.error(errors.response.data.message, {
+        console.log(errors);
+        toast.error(errors, {
           position: toast.POSITION.TOP_RIGHT,
         });
       });

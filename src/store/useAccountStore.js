@@ -5,6 +5,7 @@ import { devtools, persist } from 'zustand/middleware';
 
 const useAccountStore = create(persist(devtools((set) => ({
     signedInUserData: null,
+    jobSeekerData: null,
     signInUser: async (data) => {
         try {
             const userDto = await Services.Account.userlogin(data);
@@ -18,20 +19,16 @@ const useAccountStore = create(persist(devtools((set) => ({
             return Promise.reject({ error: error.data });
         }
     },
-    getUser: async (data) => {
+    getUser: async () => {
         try {
-            const userDto = await Services.Account.userlogin(data);
-            set((state) => ({
-                signedInUserData: [userDto, state.signedInUserData], 
-            }));
+            const jobSeeker = await Services.Account.getJobSeeker();
+            set(() => ({jobSeekerData: jobSeeker}));
         } catch (error) {
             return Promise.reject({ error: error.data });
         }
     },
     signOut: () => {
         set(() => ({ signedInUserData: null }));
-        // Ensure the state is correctly persisted after setting to null
-        set.persist();
         localStorage.removeItem('account');
         localStorage.removeItem('token');
         // history.push('/');

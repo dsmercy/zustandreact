@@ -34,7 +34,7 @@ const Account ={
     forgetPassword: (values)=> requests.post(`Account/ForgotPassword?Email=${values.email}&Domain=${values.domain}`),
     generateOTP : (values)=> requests.post(`Account/GenerateOTP?Email=${values}`,values),
     resetPassword: (values)=>requests.post(`Account/ResetPassword`, (values)),
-    getUser: () => requests.get(`getuser?emailid=${email}`),
+    getJobSeeker: () => requests.get(`account/getuser?emailid=${email}`),
 }
 
 const Services ={

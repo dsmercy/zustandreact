@@ -7,6 +7,8 @@ import ForgotPassword from "../Pages/Login/ForgetPassword";
 import ResetPassword from "../Pages/Login/ResetPassword";
 import Wizard from "../Pages/UserProfle/Wizard";
 import UserDashboard from "../Pages/UserProfle/UserDashboard";
+import JobSeekerForm from "../Pages/UserProfle/JobSeekerForm";
+import MultiStepForm from "../Pages/UserProfle/MultiStepForm";
 
 const AppRoutes = () => {
   return (
@@ -18,7 +20,8 @@ const AppRoutes = () => {
         <Route exact path="/register" element={<RegistrationForm/>} />
         <Route exact path="/forgetpassword" element={<ForgotPassword/>} />
         <Route exact path="/forget-password" element={<ResetPassword/>} />
-        <Route exact path="/job-seeker-profile" element={<Wizard/>} />
+        <Route exact path="/job-seeker-profile" element={<JobSeekerForm/>} />
+        <Route exact path="/multistepform" element={<MultiStepForm/>} />
         <Route exact path="/userdashboard" element={<UserDashboard/>} />
       </Routes>
     </>
