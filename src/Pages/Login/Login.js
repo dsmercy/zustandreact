@@ -16,29 +16,26 @@ import Services from "../../services/Services";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useAccountStore from "../../store/useAccountStore";
+import Loader from "../../components/Loader";
 
 const Login = () => {
   const navigate = useNavigate();
-
-  const signInUser = useAccountStore((state) => state.signInUser);
-  const signOut = useAccountStore((state) => state.signOut);
-  const signedInUserData = useAccountStore((state) => state.signedInUserData);
-  const getUser = useAccountStore((state) => state.getUser);
-
   const [validated, setValidated] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm({ mode: "all" });
+  const {register,formState: { errors },handleSubmit} = useForm({ mode: "all" });
   const [otpField, setOtpField] = useState(false);
   const [selectedRadio, setSelectedRadio] = useState();
   const [checked, setChecked] = useState(true);
   const [timer, setTimer] = useState(60);
   const [otpValue, setOtpValue]= useState({otp1:"", otp2:"", otp3:"", otp4:"", otp5:"", otp6:""});
+  const [loading, setLoading] = useState(false);
+  const signInUser = useAccountStore((state) => state.signInUser);
+  const signOut = useAccountStore((state) => state.signOut);
+  const signedInUserData = useAccountStore((state) => state.signedInUserData);
+  const getJobSeeker = useAccountStore((state) => state.getJobSeeker);
+
 
   useEffect(() => {
     if (!timer) return;
@@ -62,22 +59,18 @@ const Login = () => {
   const handleOtpValue = (e) => {
     setOtpValue({...otpValue, [e.target.name]: e.target.value})
   };
-// console.log("otpvalue", otpValue);
+
 const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.otp4}${otpValue?.otp5}${otpValue?.otp6}`;
-//  console.log(finalOtp);
 
   const showOtpField = () => {
     setOtpField(true);
     setChecked(!checked);
-    //  handleOtpValue();
-
+  
     Services.Account.generateOTP(email)
       .then((response) => {
-        // console.log(response);
         toast.success(response.message, {
           position: toast.POSITION.TOP_RIGHT,
         });
-        
       })
       .catch((errors) => {
         console.log(":error", errors); 
@@ -90,26 +83,26 @@ const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.
 
   const handleSubmitForm = async (e) => {
     setValidated(true);
+    setLoading(true);
     if (email === "" ) {
       return;
     }
     const data = { email: email, password: password ? password : finalOtp, isOtp: otpField };
-
-   await signInUser(data)
-      .then((response) => {
-        const user= response?.data?.accessToken
-        if (user) {          
-          navigate("/userdashboard");
-          localStorage.setItem("token", response.data.accessToken);
+    
+    await signInUser(data).then((response) => {
+        if (response?.data?.accessToken) {
+           setLoading(false);
+            navigate(`/userdashboard`);
+           localStorage.setItem("token", response.data.accessToken);
           toast.success(response.message, {
             position: toast.POSITION.TOP_RIGHT,
           });
-          getUser();
+          getJobSeeker();
         }
       })
       .catch((errors) => {
-        console.log(errors);
-        toast.error(errors, {
+        console.log(errors, "login error");
+        toast.error("Please verify your account with verfication email sent to your account.", {
           position: toast.POSITION.TOP_RIGHT,
         });
       });
@@ -121,6 +114,7 @@ const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.
   
   return (
     <>
+    {loading ?<Loader loading={loading}/>:
       <div className="log-bg">
         <div className="log-cent">
           <div className="log-card">
@@ -162,6 +156,7 @@ const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.
                   <div key={`default-${type}`} className="mb-3">
                     <Form.Check
                       checked={checked}
+                      readOnly
                       inline
                       label="Password"
                       name="group1"
@@ -321,7 +316,7 @@ const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.
               <p>or contiune with</p>
             </div>
 
-            {/* <div className="social-icon text-center1">
+            <div className="social-icon text-center1">
               <div className="">
                 <img src={google} alt="image" />
               </div>
@@ -331,15 +326,7 @@ const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.
               <div className="">
                 <img src={instagram} alt="image" />
               </div>
-            </div> */}
-
-
-<div class="social-icon d-flex justify-content-center align-items-center">
-  <a href="#"> <i class="fab fa-google"></i> </a> 
-  <a href="#"> <i class="fa fa-facebook" aria-hidden="true"></i> </a>
-   <a href="#"> <i class="fa fa-instagram" aria-hidden="true"></i> </a> 
-   </div>
-
+            </div>
 
             <div className="register-now">
               <span>
@@ -351,7 +338,7 @@ const finalOtp= `${otpValue?.otp1}${otpValue?.otp2}${otpValue?.otp3}${otpValue?.
             </div>
           </div>
         </div>
-      </div>
+      </div>}
     </>
   );
 };

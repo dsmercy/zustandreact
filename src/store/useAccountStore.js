@@ -1,6 +1,5 @@
-import {create} from 'zustand';
+import { create } from 'zustand'
 import Services from "../services/Services";
-import { toast } from "react-toastify";
 import { devtools, persist } from 'zustand/middleware';
 
 const useAccountStore = create(persist(devtools((set) => ({
@@ -8,30 +7,33 @@ const useAccountStore = create(persist(devtools((set) => ({
     jobSeekerData: null,
     signInUser: async (data) => {
         try {
-            const userDto = await Services.Account.userlogin(data);
-            if (userDto) {
+            const userDetail = await Services.Account.userlogin(data);
+            if (userDetail) {
                 set((state) => ({
-                    signedInUserData: [userDto, state.signedInUserData], 
+                    signedInUserData: userDetail, 
                 }));
             }
-            return userDto;
+            return userDetail;
         } catch (error) {
             return Promise.reject({ error: error.data });
         }
     },
-    getUser: async () => {
+    getJobSeeker: async() => {
         try {
-            const jobSeeker = await Services.Account.getJobSeeker();
-            set(() => ({jobSeekerData: jobSeeker}));
+            const userDetail = await Services.Account.getJobSeeker();
+            set(() => ({
+                jobSeekerData: userDetail 
+            }));
         } catch (error) {
             return Promise.reject({ error: error.data });
         }
     },
+    
     signOut: () => {
         set(() => ({ signedInUserData: null }));
         localStorage.removeItem('account');
         localStorage.removeItem('token');
-        // history.push('/');
+        // navigate('/login');
     },
 })), { name: 'account' }));
 

@@ -4,9 +4,19 @@ import ProgressBar from "react-bootstrap/ProgressBar";
 import leftImg from "../../assets/images/left-side-img.png";
 import sidemenu from "../../assets/images/dash-side-menu.png";
 import { UserProfileBody } from "./UserProfileBody";
+import { useNavigate } from "react-router-dom";
+import useAccountStore from "../../store/useAccountStore";
 
 export const UserSideBar = () => {
-  const now = 80;
+  const navigate = useNavigate();
+  const now = 60;
+
+  const signedInUserData = useAccountStore((state) => state.signedInUserData);
+
+  const completeProfile = () => {
+    navigate(`/job-seeker-profile`);
+  };
+
   return (
     <>
       <div className="employee-side">
@@ -16,10 +26,10 @@ export const UserSideBar = () => {
               <div className="john-smith">
                 <Row>
                   <Col lg={3}>
-                    <img src={leftImg} alt="image" />
+                    {/* <img src={leftImg} alt="image" /> */}
                   </Col>
                   <Col>
-                    <h4>John Smith</h4>
+                  <h4>{signedInUserData && signedInUserData.data?.users?.firstName} {signedInUserData && signedInUserData.data?.users?.lastName}</h4>
                     <p>UI/UX Developer</p>
                   </Col>
                 </Row>
@@ -46,7 +56,9 @@ export const UserSideBar = () => {
                   recruiter
                 </p>
                 <div className="complete-profile">
-                  <Button variant="">Complete Profile</Button>
+                  <Button variant="" onClick={completeProfile}>
+                    Complete Profile
+                  </Button>
                 </div>
               </div>
 
@@ -130,7 +142,7 @@ export const UserSideBar = () => {
                 </Col>
               </Row>
 
-              <UserProfileBody/>
+              <UserProfileBody />
             </div>
           </Col>
         </Row>

@@ -2,11 +2,22 @@ import React from 'react';
 import logo from '../../assets/images/Logo.png';
 import { NavLink } from 'react-router-dom';
 import useAccountStore from '../../store/useAccountStore';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
-
+  const navigate = useNavigate();
   const signedInUserData = useAccountStore((state) => state.signedInUserData);
   const signOut = useAccountStore((state) => state.signOut);
+  // console.log('signedInUserData',signedInUserData);
+
+  const handleChange=()=>{
+    navigate('/job-seeker-profile');
+  }
+
+const handleChangePassword=()=>{
+  navigate('/changepassword');
+}
 
   return (
     <>
@@ -40,35 +51,15 @@ const Header = () => {
               </li>
               <li className="nav-item dropdown">
                 <NavLink
-                  className="nav-link dropdown-toggle"
+                  className="nav-link"
                   to="#"
-                  id="navbarDropdownMenuLink"
                   role="button"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
                   Employers
                 </NavLink>
-                <ul
-                  className="dropdown-menu"
-                  aria-labelledby="navbarDropdownMenuLink"
-                >
-                  <li>
-                    <NavLink className="dropdown-item" to="#">
-                      Action
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink className="dropdown-item" to="#">
-                      Another action
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink className="dropdown-item" to="#">
-                      Something else here
-                    </NavLink>
-                  </li>
-                </ul>
+                
               </li>
               <li className="nav-item">
                 <NavLink className="nav-link" to="#">
@@ -86,15 +77,16 @@ const Header = () => {
                 </NavLink>
               </li>
             </ul>
-            <div className="log">
-              {signedInUserData ?
-                <>
-                <NavLink className="nav-link" to="/login">
-                  {signedInUserData[0].data?.users?.firstName}
-                </NavLink>
-                <button className="nav-link reg" onClick={signOut}>
-                Logout
-                  </button>
+            <div className=''>
+            {signedInUserData ?
+            <>
+               
+                <NavDropdown title={signedInUserData.data?.users?.firstName} style={{backgroundColor:"transparent !important"}}>
+              <NavDropdown.Item onClick={handleChange}>Profile</NavDropdown.Item> <NavDropdown.Divider />
+              <NavDropdown.Item onClick={handleChangePassword}>Change Password</NavDropdown.Item> <NavDropdown.Divider />
+              <NavDropdown.Item  onClick={signOut}>Logout</NavDropdown.Item>
+              <NavDropdown.Item  onClick={signOut} style={{display:"none"}}></NavDropdown.Item>
+                              </NavDropdown>
                 </> :
                 <>
                   <NavLink className="nav-link" to="/login">
@@ -104,7 +96,10 @@ const Header = () => {
                     Register
                   </NavLink>
                 </>}
-              
+
+              {/* <NavLink className="nav-link reg" to="/register">
+                Register
+              </NavLink> */}
             </div>
           </div>
         </div>

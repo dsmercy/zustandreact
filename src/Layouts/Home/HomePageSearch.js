@@ -1,12 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import group from "../../assets/images/Group 41384.png";
 // import { updateUser } from "../../services/axiosAPI/Registration";
 
 const HomePageSearch = () => {
-  // useEffect(() => {
-  //   let res = updateUser();
-  //   console.log(res, "response from interceptre API");
-  // }, []);
+  
   return (
     <>
       <div className="container">

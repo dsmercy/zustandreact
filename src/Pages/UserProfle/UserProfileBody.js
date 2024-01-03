@@ -1,6 +1,6 @@
 import React from 'react'
 import micro from '../../assets/images/Microsoft_logo_(2012) 2.png';
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import appstore from "../../assets/images/app-store-google-play-logo 3.png";
 import googleplay from "../../assets/images/app-store-google-play-logo 4.png";
 
@@ -14,7 +14,7 @@ export const UserProfileBody = () => {
                 </h4>
                 <p> View All</p>
               </div>
-              <Row>
+              <Row> 
                 <Col>
                   <div className="visual-card">
                     <img src={micro} alt="image" />
@@ -93,9 +93,7 @@ export const UserProfileBody = () => {
                     </div>
                     <div className="dash-prog">
                       <Row>
-                        {/* <Col>
-            <ProgressBar variant="success" animated now={now} label={`${now}%`} />
-            </Col> */}
+                       
                         <Col>
                           <div className="apply-now">
                             <Button variant="">
@@ -108,7 +106,7 @@ export const UserProfileBody = () => {
                   </div>
                 </Col>
               </Row>
-              <div class="match-job">
+              <div className="match-job">
                 <h4>
                   Volunteer <span>Opportunities </span>
                 </h4>

@@ -10,23 +10,20 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const ForgotPassword = () => {
-  const {register,formState: { errors },handleSubmit} = useForm({ mode: 'all' });
+  const {register,formState: { errors }} = useForm({ mode: 'all' });
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+  // const [message, setMessage] = useState('');
   const navigate = useNavigate();
   const backToLogin = () => {
     navigate("/login");
   };
 
   const body ={email:email, domain:`${window.location.origin}/`};
-  // console.log(body);
   const handleReset = () => {
     Services.Account.forgetPassword(body).then(response=>{
-      // console.log("response", response);
       toast.success(response.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
-      // console.log(response.message);
       
     }).catch((error)=>{
       console.log(error.response.data.title);

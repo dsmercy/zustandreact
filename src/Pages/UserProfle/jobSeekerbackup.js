@@ -10,13 +10,14 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import benfit from '../../assets/images/Group 41634.png'
 import Header from '../../components/Header/Header';
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import Services from '../../services/Services';
 import {  useParams } from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useAccountStore from '../../store/useAccountStore';
-import EducationForm from './EducationForm';
+import Button from "react-bootstrap/Button";
+import Select from 'react-dropdown-select';
 
 
 const JobSeekerForm = () => {
@@ -33,21 +34,28 @@ const JobSeekerForm = () => {
   const [fieldOfStudy,setFieldOfStudy]=useState('');
   const[universityName,setUniversityName]=useState('');
   const[yearOfCompletion,setYearOfCompletion]=useState('')
+  const [selectedOptions, setSelectedOptions] = useState([]);
   const jobSeekerData = useAccountStore((state) => state.jobSeekerData);
-  const [eduData,setEduData]=useState([]);
-  const [location, setLocation]=useState('');
-  const[middleName,setMiddleName]=useState('');
-  const [companyName, setCompanyName]= useState("");
- 
+
   const defaultValues = {
     firstName: jobSeekerData.data.firstName,
-    middleName: middleName,
+    middleName: jobSeekerData.data.middleName,
     lastName: jobSeekerData.data.lastName,
     email: jobSeekerData.data.email,
     phoneNumber: jobSeekerData.data.phoneNumber,
-    currentLocation: location,
-    };
+    currentLocation: jobSeekerData.data.currentLocation
+  };
+
   const {register,formState: { errors },handleSubmit} = useForm({ defaultValues, mode: 'all' });
+const options= skills.map((item=>({
+  value: item.value,
+  label: item.label
+})
+))
+
+const handleSkills = (selected) => {
+  setSelectedOptions(selected);
+};
 
   useEffect(() => {
     getDegree();
@@ -107,14 +115,12 @@ const handleComplete = (data) => {
     }
     
     const tabChanged = ({
-      
       prevIndex,
       nextIndex,
     }) => {
-       console.log("prevIndex", prevIndex);
-      console.log("nextIndex", nextIndex);
+      // console.log("prevIndex", prevIndex);
+      // console.log("nextIndex", nextIndex);
     };
-
 const body =[{
   degreeName: degreeName.id,
   fieldOfStudy: fieldOfStudy.id,
@@ -127,48 +133,13 @@ const body =[{
         toast.success(response.message, {
           position: toast.POSITION.TOP_RIGHT,
         });
-        
-          Services.Profile.getJobSeekerDetails().then((resData)=>{
-            // setEduData(resData?.data);
-            setEduData([...eduData, ...resData?.data]);
-          }).catch((errors)=>{
-            console.log(errors);
-          })
-        
       }).catch((errors)=>console.log(errors))
     }
 
     const handleContinue = () => {
-      Services.Profile.updateJobSeeker(defaultValues).then((response)=>{
-          }).catch((errors)=>{
-      console.log(errors)
-    })
+  console.log('conti');
 }
-// const details=[
-//   {
-//     expTypes:expTypes,
-//     currentEmployee: currentEmployee,
-//     companyName: companyName,
-//     jobTitle: jobTitle,
-//     jobDescription:jobDescription,
-//     startDate: startDate,
-//     endDate: endDate,
-//     salary: salary,
-//     yearOfExperience: yearOfExperience,
-//     skillId: skillId,
-//     salaryTypeId: salaryTypeId
-//   }
-// ];
 
-// console.log(details);
-const handleAddPosition=()=>{
-Services.Profile.setJobSeekerExperience(null).then((response)=>{
-  console.log(response);
-}).catch((errors)=>{
-  console.log(errors)
-})
-
-}
 
    return (
      <>
@@ -227,18 +198,16 @@ Services.Profile.setJobSeekerExperience(null).then((response)=>{
                          <button
                            className="wizard-btn"
                            type="submit"
-                           onClick={() => {
-                             handleContinue();
-                             handleNext();
-                           }}
+                           onClick={ () => {
+                            handleContinue();
+                            handleNext()
+                           } }
                          >
                            Continue
                          </button>
                        </div>
                      )}
                    >
-                     {/* -------------------------First Form---------------- */}
-
                      <FormWizard.TabContent
                        title="Basic Details"
                        icon="fa fa-check"
@@ -272,8 +241,6 @@ Services.Profile.setJobSeekerExperience(null).then((response)=>{
                                aria-describedby="basic-addon1"
                                {...register("middleName")}
                                isInvalid={!!errors.middleName}
-                               value={middleName}
-                               onChange={(e) => setMiddleName(e.target.value)}
                              />
                            </InputGroup>
                          </Col>
@@ -353,17 +320,13 @@ Services.Profile.setJobSeekerExperience(null).then((response)=>{
                                placeholder="Current Location"
                                aria-label="Current Location"
                                aria-describedby="basic-addon1"
-                               value={location}
                                {...register("location", { required: true })}
                                isInvalid={!!errors.location}
-                               onChange={(e) => setLocation(e.target.value)}
                              />
                            </InputGroup>
                          </Col>
                        </Row>
                      </FormWizard.TabContent>
-
-                     {/*-------------- Second Form------------*/}
 
                      <FormWizard.TabContent
                        title="Education & Skill"
@@ -371,9 +334,7 @@ Services.Profile.setJobSeekerExperience(null).then((response)=>{
                      >
                        <h5>Education & Skills</h5>
                        <span className="bord"></span>
-                       {eduData.length
-                         ? eduData.map((edu) => <EducationForm eduData={edu} />)
-                         : ""}
+
                        <Row>
                          <Col>
                            <FormLabel>
@@ -385,22 +346,14 @@ Services.Profile.setJobSeekerExperience(null).then((response)=>{
                              {...register("degreeName", { required: true })}
                              isInvalid={!!errors.degreeName}
                              onChange={(e) => {
-                               const selectedItem = degree.find(
-                                 (item) => item.degreeName === e.target.value
-                               );
-                               setDegreeName({
-                                 id: selectedItem.id,
-                                 value: selectedItem.degreeName,
-                               });
-                             }}
+                                 const selectedItem = degree.find((item) => item.degreeName === e.target.value)
+                                 setDegreeName({ id: selectedItem.id, value: selectedItem.degreeName})
+                             }
+                            }
                            >
                              <option value="">Open this select menu </option>
                              {degree?.map((item) => (
-                               <option
-                                 id={item.id}
-                                 value={item?.degreeName}
-                                 key={item?.id}
-                               >
+                               <option id={item.id} value={item?.degreeName} key={item?.id}>
                                  {item?.degreeName}
                                </option>
                              ))}
@@ -423,22 +376,13 @@ Services.Profile.setJobSeekerExperience(null).then((response)=>{
                              {...register("fieldOfStudy", { required: true })}
                              isInvalid={!!errors.fieldOfStudy}
                              onChange={(e) => {
-                               const selectedItem = study.find(
-                                 (item) => item.fieldOfStudy === e.target.value
-                               );
-                               setFieldOfStudy({
-                                 id: selectedItem.id,
-                                 value: selectedItem.fieldOfStudy,
-                               });
+                              const selectedItem = study.find((item) => item.fieldOfStudy === e.target.value)
+                              setFieldOfStudy({ id: selectedItem.id, value: selectedItem.fieldOfStudy})
                              }}
                            >
                              <option value="">Open this select menu </option>
                              {study.map((item) => (
-                               <option
-                                 id={item.id}
-                                 value={item.fieldOfStudy}
-                                 key={item.id}
-                               >
+                               <option id={item.id} value={item.fieldOfStudy} key={item.id}>
                                  {item.fieldOfStudy}
                                </option>
                              ))}
@@ -461,22 +405,13 @@ Services.Profile.setJobSeekerExperience(null).then((response)=>{
                              {...register("universityName", { required: true })}
                              isInvalid={!!errors.universityName}
                              onChange={(e) => {
-                               const selectedItem = university?.find(
-                                 (item) => item.university === e.target.value
-                               );
-                               setUniversityName({
-                                 id: selectedItem.id,
-                                 value: selectedItem.university,
-                               });
-                             }}
+                              const selectedItem = university?.find((item) => item.university === e.target.value)
+                              setUniversityName({ id: selectedItem.id, value: selectedItem.university})
+                            }}
                            >
                              <option value="">Open this select menu </option>
                              {university?.map((item) => (
-                               <option
-                                 id={item.id}
-                                 value={item.university}
-                                 key={item.id}
-                               >
+                               <option id={item.id} value={item.university} key={item.id}>
                                  {item.university}
                                </option>
                              ))}
@@ -531,24 +466,31 @@ Services.Profile.setJobSeekerExperience(null).then((response)=>{
                            <FormLabel>
                              Skills <span className="text-danger">*</span>
                            </FormLabel>
-                           <Form.Select
-                             aria-label="Default select example"
+                          
+                           <Select
+                             name="select"
+                             labelField="label"
+                             valueField="value"
+                             multi
                              className="mb-3"
                              {...register("skillName", { required: true })}
                              isInvalid={!!errors.skillName}
+                             options={options}
+                             value={selectedOptions}
+                             onChange={handleSkills}
                            >
-                             <option>Open this select menu </option>
+
+                             {/* <option>Open this select menu </option>
                              {skills?.map((item) => (
                                <option value={item.skillName} key={item.id}>
                                  {item.skillName}
                                </option>
-                             ))}
-                           </Form.Select>
+                             ))} */}
+                           </Select>
+                           {/* </Form.Select> */}
                          </Col>
                        </Row>
                      </FormWizard.TabContent>
-
-                     {/* ---------------Third Form -----------------*/}
 
                      <FormWizard.TabContent
                        title="Experience"
@@ -566,7 +508,6 @@ Services.Profile.setJobSeekerExperience(null).then((response)=>{
                                    type="checkbox"
                                    id="exper"
                                    name="exper"
-                                   {...register('experience')}
                                  />{" "}
                                  <label for="exper">I'm Experienced</label>
                                </h4>
@@ -583,7 +524,6 @@ Services.Profile.setJobSeekerExperience(null).then((response)=>{
                                    type="checkbox"
                                    id="fresher"
                                    name="exper"
-                                   {...register('fresher')}
                                  />{" "}
                                  <label for="fresher">I’m a Fresher</label>{" "}
                                </h4>
@@ -601,7 +541,6 @@ Services.Profile.setJobSeekerExperience(null).then((response)=>{
                              type="radio"
                              id="eyes"
                              name="current"
-                             {...register('yes')}
                            />
                            <label for="eyes">Yes </label>
                            <input
@@ -609,7 +548,6 @@ Services.Profile.setJobSeekerExperience(null).then((response)=>{
                              type="radio"
                              id="eno"
                              name="current"
-                             {...register('no')}
                            />
                            <label for="eno">No </label>
                          </div>
@@ -623,9 +561,6 @@ Services.Profile.setJobSeekerExperience(null).then((response)=>{
                              placeholder="Company name"
                              aria-label="Company"
                              aria-describedby="basic-addon1"
-                             value={data.companyName}
-                             {...register("companyName", { required: true })}
-                             isInvalid={!!errors.companyName}
                            />
                          </InputGroup>
 
@@ -638,9 +573,6 @@ Services.Profile.setJobSeekerExperience(null).then((response)=>{
                              placeholder="Job Title"
                              aria-label="JobTitle"
                              aria-describedby="basic-addon1"
-                             value={data.jobTitle}
-                             {...register("jobTitle", { required: true })}
-                             isInvalid={!!errors.jobTitle}
                            />
                          </InputGroup>
 
@@ -649,32 +581,15 @@ Services.Profile.setJobSeekerExperience(null).then((response)=>{
                              <FormLabel>
                                Start Date <span className="text-danger">*</span>
                              </FormLabel>
-                             <Form.Group controlId="datePicker">
-                               <Form.Control
-                                 {...register("startDate", { required: true })}
-                                 isInvalid={!!errors.startDate}
-                                 type="date"
-                               />
-                               <Form.Control.Feedback type="invalid">
-                                 This field is required.
-                               </Form.Control.Feedback>
-                             </Form.Group>
-                           </Col>
-                         
-                           <Col>
-                             <FormLabel>
-                               End Date <span className="text-danger">*</span>
-                             </FormLabel>
-                             <Form.Group controlId="datePicker">
-                               <Form.Control
-                                 {...register("endDate", { required: true })}
-                                 isInvalid={!!errors.endDate}
-                                 type="date"
-                               />
-                               <Form.Control.Feedback type="invalid">
-                                 This field is required.
-                               </Form.Control.Feedback>
-                             </Form.Group>
+                             <Form.Select
+                               aria-label="Default select example"
+                               className="mb-3"
+                             >
+                               <option>Calendar</option>
+                               <option value="1">2022</option>
+                               <option value="2">2021</option>
+                               <option value="3">2020</option>
+                             </Form.Select>
                            </Col>
                          </Row>
 
@@ -685,14 +600,9 @@ Services.Profile.setJobSeekerExperience(null).then((response)=>{
                            <Form.Control
                              type="text"
                              placeholder=""
-                             aria-label="skills"
+                             aria-label="Username"
                              aria-describedby="basic-addon1"
-                             {...register("skillUsed", { required: true })}
-                             isInvalid={!!errors.skillUsed}
                            />
-                           <Form.Control.Feedback type="invalid">
-                                 This field is required.
-                               </Form.Control.Feedback>
                          </InputGroup>
 
                          <FormLabel>Job Description</FormLabel>
@@ -732,15 +642,13 @@ Services.Profile.setJobSeekerExperience(null).then((response)=>{
                            <label for="annually">Annually </label>
                          </div>
 
-                         <div className="add-position" onClick={handleAddPosition}>
+                         <div className="add-position">
                            <h4>
                              <i className="fa fa-plus-circle"></i> Add Position
                            </h4>
                          </div>
                        </div>
                      </FormWizard.TabContent>
-
-                     {/* -----------------------Forth Form--------------- */}
 
                      <FormWizard.TabContent
                        title="Job Preference"

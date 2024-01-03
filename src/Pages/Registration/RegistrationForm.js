@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormLabel } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
@@ -16,13 +16,18 @@ import Services from "../../services/Services";
 
 
 const RegistrationForm = () => {
+
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm({ mode: 'all' });
   const [validated, setValidated] = useState(false);
+  const [role, setRole] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(()=>{
+    getRole();},[])
 
   const handleFormSubmit = async (formData) => {
     setValidated(true);
@@ -35,7 +40,7 @@ const RegistrationForm = () => {
       toast.success(response.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
-       navigate("/login");  
+       navigate("/ConfirmEmail");  
     }) .catch((error) => {
       // Error
       console.log('error.message', error.response.data.message);
@@ -46,6 +51,14 @@ const RegistrationForm = () => {
   
   };
 
+const getRole=()=>{
+  Services.Account.getRole().then(response=>{
+    console.log(response?.data);
+    setRole(response?.data)
+   }).catch((errors)=>{
+    console.log(errors)
+  }) 
+}
   const backToLogin = () => {
     navigate("/login");
   };
@@ -70,11 +83,11 @@ const RegistrationForm = () => {
                     className="mb-3"
                     {...register("roleName", { required: true })}
                     isInvalid={!!errors.roleName}
-                    
                   >
-                    <option value="">Open this select menu</option>
-                    <option value="JobSeeker">JobSeeker</option>
-                    <option value="Recruiter">Recruiter</option>
+                    <option value="">Select Role</option>
+                    {role?.map((item, index) => (
+        <option key={index} value={item?.roleName}>{item?.roleName}</option>
+      ))}
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
                     Please select a Role.
@@ -96,7 +109,6 @@ const RegistrationForm = () => {
                       aria-describedby="basic-addon1"
                       {...register("firstName", { required: true })}
                       isInvalid={!!errors.firstName}
-                      
                     />
                     <Form.Control.Feedback type="invalid">
                       Please enter First Name.
@@ -117,7 +129,6 @@ const RegistrationForm = () => {
                       aria-describedby="basic-addon1"
                       {...register("lastName", { required: true })}
                       isInvalid={!!errors.lastName}
-                      
                     />
                     <Form.Control.Feedback type="invalid">
                       Please enter a valid Username.
@@ -141,7 +152,6 @@ const RegistrationForm = () => {
                         pattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i,
                       })}
                       isInvalid={!!errors.email}
-                      
                     />
                     <Form.Control.Feedback type="invalid">
                       Please enter a valid email address.
@@ -167,7 +177,6 @@ const RegistrationForm = () => {
                       })}
                       isInvalid={!!errors.password}
                       name="password"
-                      
                     />
                     <Form.Control.Feedback type="invalid">
                       Please enter a valid Password.
@@ -190,16 +199,15 @@ const RegistrationForm = () => {
                       aria-label="Username"
                       maxLength={10}
                       aria-describedby="basic-addon1"
-                      {...register('phoneNumber', {
+                      {...register("phoneNumber", {
                         required: true,
                         maxLength: 10,
                         pattern: {
                           value: /^[0-9\b]+$/,
-                          message: "Invalid phone number"
-                        }
+                          message: "Invalid phone number",
+                        },
                       })}
                       isInvalid={!!errors.phoneNumber}
-                      
                     />
                     <Form.Control.Feedback type="invalid">
                       Please enter a valid Phone Number.
@@ -218,7 +226,7 @@ const RegistrationForm = () => {
                     {...register("checkbox", { required: true })}
                     isInvalid={!!errors.checkbox}
                   />
-                  <p>
+                  <p className="trm_condition">
                     I agree to the <a>Terms & Conditions</a> and{" "}
                     <a>Privacy Policy</a> of Poppin’ job.
                   </p>
@@ -235,7 +243,7 @@ const RegistrationForm = () => {
               </div>
 
               <div className="log-contiune">
-                <p>or contiune with</p>
+                <p className="mb-0">or contiune with</p>
               </div>
 
               <div className="social-icon text-center1">
@@ -259,7 +267,6 @@ const RegistrationForm = () => {
                 </span>
               </div>
             </Form>
-       
           </div>
         </div>
       </div>

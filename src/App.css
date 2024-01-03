@@ -112,7 +112,10 @@ body {
 .log-contiune p:after{
   margin: 0 0 0 20px;
 }
-
+.social-icon {
+  display: flex;
+  justify-content: center;
+}
 .social-icon >div {
     background: #F0F3F6;
     border-radius: 6px;
@@ -123,7 +126,10 @@ body {
     text-align: center;
     cursor: pointer;
 }
-
+.social-icon >div img {
+  width: 32px;
+  height: 32px;
+}
 .register-now {
   text-align: center;
   padding: 20px;
@@ -184,7 +190,10 @@ footer {
 .foot-f p {
    padding-top: 20px;
 }
-
+.social-icon {
+ display: flex;
+ 
+}
 .social-icon .social-icon-inner {
    width: 46px;
    height: 46px;
@@ -194,11 +203,11 @@ footer {
    margin-right: 10px;
    cursor:pointer;
 }
-/* .social-icon i {
+.social-icon i {
  font-size: 18px;
  line-height: 46px;
  color: #fff;
-} */
+}
 .app-icon {
  display: flex;
 }
@@ -389,6 +398,48 @@ footer {
    width: 576px;
   margin-left: 82px;
 } */
+
+/* add skill */
+
+.css-9ma7ck-OptionComponent {
+  background: #f2f8fe !important;
+  color: #000 !important;
+  border: 1px solid #ddd !important;
+}
+/* .css-z2hyoe-ItemComponent.react-dropdown-select-item-selected {
+  background: var(--bg-green) !important;
+  color: #fff;
+} */
+.css-wmy1p7-ReactDropdownSelect {
+  margin-bottom: 20px;
+}
+
+/* add education box css */
+
+.edit-educ-sec {
+  width:100%;
+  padding: 10px;
+  background: #fdfdfd;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+.edit-educ-sec h4 {
+  font-size: 18px;
+}
+.edit-educ-sec p {
+  font-size: 14px;
+}
+.edit-educ-sec span {
+  float: right;
+}
+.edit-educ-sec i {
+  color: #c05151
+}
+.edit-educ-sec span {
+  color: var(--link-color);
+  cursor: pointer;
+}
 
 /*================ Employee dashboard ==============================*/
 
@@ -603,7 +654,7 @@ footer {
   background: var(--back-color);
 }
 .volunteer {
-  /* background-image: url('./assets/images/Group 41743.png'); */
+  background-image: url('./assets/images/Group 41743.png');
   background-repeat: no-repeat;
   height:340px;
   border: 1px solid #ddd;
@@ -661,7 +712,7 @@ footer {
   margin: 0 10px;
 }
 
-/*================ Searcch result css ==============================*/
+/*================ Search result css ==============================*/
 
 .search-bread {
   position: relative;
@@ -697,3 +748,146 @@ footer {
   margin: 0;
   position: absolute;
 }
+
+.search-result-container {
+  border-radius: 50px;
+  background: #fff;
+  box-shadow: 0px 2px 6px 2px rgba(0, 0, 0, 0.10);
+  width: 100%;
+  flex-shrink: 0;
+  display: flex;
+  padding: 14px;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-top: -20px;
+  position: relative;
+}
+.search-result-container i {
+  position: absolute;
+  margin: 6px;
+  font-size: 20px;
+  color: var(--link-color);
+}
+ .search-result-container .form-control, .search-result-container .form-select {
+  border-right: 1px solid #ddd !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-bottom: none !important;
+  border-radius:0px !important
+}
+.search-result-container::placeholder {
+  font-size: 18px;
+}
+/*.search-container-btn {
+   float: inline-end;
+} */
+ .search-result-container-btn button {
+  background: var(--bg-green);
+  color: var(--color-white);
+  padding: 6px 28px;
+}
+.search-result-filter {
+  display: flex;
+  margin: 20px;
+}
+.search-result-filter select {
+  margin: 10px;
+}
+.sear-inner {
+  display: flex;
+  justify-content: space-between;
+}
+.sear-inner h4 {
+  font-size: 14px;
+}
+.sear-inner select {
+  width: 26%;
+  height: 26px;
+  font-size: 14px;
+  padding: 0 8px;
+}
+.search-result-card {
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 6px;
+  margin: 20px 0;
+}
+.search-result-card .fa-star {
+  color: #FFC524;
+}
+
+.rating {
+  padding-left: 40px; 
+}
+.search-result-card .fa-bookmark-o {
+  float: right;
+  color: var(--link-color);
+  font-size: 18px;
+}
+.search-result-card h4 {
+  color: var(--grey-color);
+}
+.search-result-card h5 {
+  margin: 2px 0 0 140px;
+  font-weight: 400;
+  color: var(--grey-color);
+}
+.search-result-card span {
+  padding-right: 20px;
+  color: var(--grey-color);
+}
+.search-result-card .para {
+  padding: 20px 0;
+  color: var(--grey-color);
+}
+.search-result-card span i {
+  padding-right: 10px;
+}
+.search-full {
+  display: flex;
+  margin: 20px 0;
+}
+.timer i {
+  color: var(--grey-color);
+}
+.sear-skill {
+  display: flex;
+  justify-content: space-around;
+}
+ .sear-skill p {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    color: var(--grey-color);
+    padding: 4px 10px;
+    margin-right: 20px;
+}
+/* =============== view profile detail ==========*/
+
+.view-profile-detail h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin:20px 0; 
+}
+.view-profile-detail-inner {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);  
+  padding: 40px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+.user-profile-update p {
+  float: right;
+  color: var(--bg-green);
+  cursor: pointer;
+}
+.user-basic-detail {
+  margin-bottom: 28px;
+}
+.user-basic-detail p {
+  font-size: 18px;
+  margin: 0;
+  padding: 10px 0;
+}
+ .user-row-border  {
+  border-bottom: 1px solid #f7f1f1;
+}
+
